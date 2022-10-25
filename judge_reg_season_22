@@ -1,0 +1,98 @@
+/*
+    Aaron Judge 2022 Regular Season
+                                       */
+                                       
+#reviewing table, ensuring it contains all necessary data
+SELECT *
+FROM baseball_stats.converted_judge_2022_reg_season
+    
+#how many homeruns did Aaron Judge have in the 2022 regular season?
+SELECT
+	SUM(homeruns) AS total_homeruns
+FROM baseball_stats.converted_judge_2022_reg_season
+    
+#summary of 2022 stats
+SELECT
+	CAST(SUM(hits)/SUM(at_bats) AS DECIMAL (4,3)) AS AVG,
+    SUM(homeruns) HR,
+	SUM(at_bats) AB,
+    SUM(runs) R,
+    SUM(hits) H,
+    SUM(runs_batted_in) RBI,
+    SUM(strike_outs) SO,
+    SUM(stolen_bases) SB
+FROM baseball_stats.converted_judge_2022_reg_season
+
+#who did Aaron Judge have the most homeruns against?
+SELECT
+	opponent,
+    SUM(homeruns) AS total_homeruns
+FROM baseball_stats.converted_judge_2022_reg_season
+GROUP BY opponent
+ORDER BY 2 desc
+
+#number of homeruns against division rivals
+SELECT
+	opponent,
+	SUM(CASE 
+		WHEN opponent = 'BAL' THEN homeruns
+        WHEN opponent = 'BOS' THEN homeruns
+        WHEN opponent = 'TB' THEN homeruns
+        WHEN opponent = 'TOR' THEN homeruns
+        END) AS total_homeruns
+FROM baseball_stats.converted_judge_2022_reg_season
+GROUP BY
+	opponent
+ORDER BY 2 desc
+LIMIT 4;
+
+#creating table of Judge's 2022 reg season stats summary
+CREATE TABLE baseball_stats.judge_2022_summary AS
+SELECT
+	CAST(SUM(hits)/SUM(at_bats) AS DECIMAL (4,3)) AS AVG,
+	SUM(homeruns) HR,
+	SUM(at_bats) AB,
+	SUM(runs) R,
+	SUM(hits) H,
+	SUM(runs_batted_in) RBI,
+	SUM(strike_outs) SO,
+	SUM(stolen_bases) SB
+FROM baseball_stats.converted_judge_2022_reg_season;
+
+SELECT
+	*
+FROM baseball_stats.judge_2022_summary
+
+#teams that struck out Judge the most and SO per game ... looks like division rivals struck him out the most 
+SELECT
+	opponent,
+	SUM(strike_outs) AS total_strikeouts,
+    CAST(SUM(strike_outs)/COUNT(opponent) AS DECIMAL(4,2)) AS SO_per_game
+FROM baseball_stats.converted_judge_2022_reg_season
+GROUP BY opponent
+ORDER BY 2 desc
+
+#most teams Judge faced ... makes sense why he struckout the most against division rivals since he faced them the most
+SELECT
+	opponent,
+	COUNT(opponent)
+FROM baseball_stats.converted_judge_2022_reg_season
+GROUP BY opponent
+ORDER BY 2 desc
+
+#looking at top 5 teams that struck out Judge the most (excluding division rivals)
+SELECT
+	opponent,
+    COUNT(opponent) AS games,
+    SUM(CASE 
+		WHEN opponent = 'BAL' THEN 0
+        WHEN opponent = 'BOS' THEN 0
+        WHEN opponent = 'TB' THEN 0
+        WHEN opponent = 'TOR' THEN 0
+        ELSE strike_outs
+        END) AS total_strikeouts,
+	CAST(SUM(strike_outs)/COUNT(opponent) AS DECIMAL(4,2)) AS SO_per_game
+FROM baseball_stats.converted_judge_2022_reg_season
+GROUP BY opponent
+ORDER BY 3 desc
+LIMIT 5
