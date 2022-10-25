@@ -14,3 +14,8 @@ Project is created with:
 * MySQLWorkbench 
 * Microsoft Excel
 * Tableau Public 
+
+## Sources
+Data is gathered from:
+* MLB's official website - https://www.mlb.com
+* Baseball Reference - https://www.baseball-reference.com
