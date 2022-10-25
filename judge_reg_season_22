@@ -1,7 +1,8 @@
 /*
     Aaron Judge 2022 Regular Season
                                        */
-                                       
+
+```SQL
 #reviewing table, ensuring it contains all necessary data
 SELECT *
 FROM baseball_stats.converted_judge_2022_reg_season
@@ -96,3 +97,4 @@ FROM baseball_stats.converted_judge_2022_reg_season
 GROUP BY opponent
 ORDER BY 3 desc
 LIMIT 5
+```
