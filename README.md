@@ -6,7 +6,7 @@ This project centers around different baseball statistics surrounding different 
 ## Table of Contents
 * Aaron Judge 2022 Regular Season
   * [Raw data](https://github.com/luchocodes/baseball_stats/blob/main/converted_judge_2022_reg_season.xlsx)
-  * MySQL Query Syntax
+  * [MySQL Query Syntax](https://github.com/luchocodes/baseball_stats/blob/main/judge_reg_season_22)
   * [Tableau Dashboard](https://public.tableau.com/app/profile/luis.leon.guerrero/viz/AaronJudge2022HomerunsDashboard/Homeruns)
 * Aaron Judge Regular Season Career  
   * Raw data
