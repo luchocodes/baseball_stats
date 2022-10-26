@@ -10,18 +10,6 @@ FROM baseball_stats.converted_judge_2022_reg_season
 SELECT
 	SUM(homeruns) AS total_homeruns
 FROM baseball_stats.converted_judge_2022_reg_season
-    
-#summary of 2022 stats
-SELECT
-	CAST(SUM(hits)/SUM(at_bats) AS DECIMAL (4,3)) AS AVG,
-    SUM(homeruns) HR,
-	SUM(at_bats) AB,
-    SUM(runs) R,
-    SUM(hits) H,
-    SUM(runs_batted_in) RBI,
-    SUM(strike_outs) SO,
-    SUM(stolen_bases) SB
-FROM baseball_stats.converted_judge_2022_reg_season
 
 #who did Aaron Judge have the most homeruns against?
 SELECT
@@ -46,24 +34,7 @@ GROUP BY
 ORDER BY 2 desc
 LIMIT 4;
 
-#creating table of Judge's 2022 reg season stats summary
-CREATE TABLE baseball_stats.judge_2022_summary AS
-SELECT
-	CAST(SUM(hits)/SUM(at_bats) AS DECIMAL (4,3)) AS AVG,
-	SUM(homeruns) HR,
-	SUM(at_bats) AB,
-	SUM(runs) R,
-	SUM(hits) H,
-	SUM(runs_batted_in) RBI,
-	SUM(strike_outs) SO,
-	SUM(stolen_bases) SB
-FROM baseball_stats.converted_judge_2022_reg_season;
-
-SELECT
-	*
-FROM baseball_stats.judge_2022_summary
-
-#teams that struck out Judge the most and SO per game ... looks like division rivals struck him out the most 
+#teams that struck out Judge the most and strikeours per game ... looks like division rivals struck him out the most 
 SELECT
 	opponent,
 	SUM(strike_outs) AS total_strikeouts,
@@ -96,3 +67,72 @@ FROM baseball_stats.converted_judge_2022_reg_season
 GROUP BY opponent
 ORDER BY 3 desc
 LIMIT 5
+
+#how many games did Judge play at home vs away + total number of games played
+SELECT
+	COUNT(home_away) AS home_games
+FROM baseball_stats.converted_judge_2022_reg_season
+WHERE 
+	home_away = 'Home'
+    
+SELECT
+	COUNT(home_away) AS away_games
+FROM baseball_stats.converted_judge_2022_reg_season
+WHERE 
+	home_away = 'Away'
+    
+SELECT
+	COUNT(home_away) AS total_games_played
+FROM baseball_stats.converted_judge_2022_reg_season
+
+#number of hits, doubles, and triples
+SELECT
+	SUM(hits) AS 1B,
+    SUM(doubles) AS 2B,
+    SUM(triples) AS 3B
+FROM baseball_stats.converted_judge_2022_reg_season
+
+#How many times was Judged intentionally or unintentionally walked? was Judge hit by a pitch during the regular season? What teams hit Judge?
+SELECT
+	SUM(base_on_balls)+SUM(intentional_bbs)
+FROM baseball_stats.converted_judge_2022_reg_season
+
+SELECT
+	SUM(hit_by_pitch)
+FROM baseball_stats.converted_judge_2022_reg_season
+
+SELECT
+	opponent,
+	hit_by_pitch
+FROM baseball_stats.converted_judge_2022_reg_season
+ORDER BY 2 desc
+LIMIT 10
+
+#summary of 2022 stats
+SELECT
+	CAST(SUM(hits)/SUM(at_bats) AS DECIMAL (4,3)) AS AVG,
+    SUM(homeruns) HR,
+	SUM(at_bats) AB,
+    SUM(runs) R,
+    SUM(hits) H,
+    SUM(runs_batted_in) RBI,
+    SUM(strike_outs) SO,
+    SUM(stolen_bases) SB
+FROM baseball_stats.converted_judge_2022_reg_season
+
+#creating table of Judge's 2022 reg season stats summary
+CREATE TABLE baseball_stats.judge_2022_summary AS
+SELECT
+	CAST(SUM(hits)/SUM(at_bats) AS DECIMAL (4,3)) AS AVG,
+	SUM(homeruns) HR,
+	SUM(at_bats) AB,
+	SUM(runs) R,
+	SUM(hits) H,
+	SUM(runs_batted_in) RBI,
+	SUM(strike_outs) SO,
+	SUM(stolen_bases) SB
+FROM baseball_stats.converted_judge_2022_reg_season;
+
+SELECT
+	*
+FROM baseball_stats.judge_2022_summary
